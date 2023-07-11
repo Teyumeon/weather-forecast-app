@@ -1,0 +1,36 @@
+import requests
+
+def get_weather_forecast(api_key, city):
+    url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&days=3"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        print("Error occurred while fetching weather forecast data.")
+
+def display_weather_forecast(forecast_data):
+    location = forecast_data["location"]["name"]
+    current_temp = forecast_data["current"]["temp_c"]
+    print(f"Weather forecast for {location}:")
+    print(f"Current Temperature: {current_temp}°C\n")
+    forecast_days = forecast_data["forecast"]["forecastday"]
+    for day in forecast_days:
+        date = day["date"]
+        max_temp = day["day"]["maxtemp_c"]
+        min_temp = day["day"]["mintemp_c"]
+        condition = day["day"]["condition"]["text"]
+        print(f"Date: {date}")
+        print(f"Max Temperature: {max_temp}°C")
+        print(f"Min Temperature: {min_temp}°C")
+        print(f"Condition: {condition}\n")
+
+def main():
+    api_key = "YOUR_API_KEY"  # Replace with your actual API key
+    city = input("Enter the city name: ")
+    forecast_data = get_weather_forecast(api_key, city)
+    if forecast_data:
+        display_weather_forecast(forecast_data)
+
+if __name__ == "__main__":
+    main()
